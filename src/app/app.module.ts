@@ -19,6 +19,10 @@ import { WebviewDirective } from './directives/webview.directive';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
+import { WorkoutService } from './providers/workout.service';
+import { WorkoutListComponent } from './components/workout-list/workout-list.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from './material/material.module';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -29,12 +33,15 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
     AppComponent,
     HomeComponent,
-    WebviewDirective
+    WorkoutListComponent,
+    WebviewDirective,
+    WorkoutListComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    MaterialModule,
     AppRoutingModule,
     TranslateModule.forRoot({
       loader: {
@@ -42,9 +49,13 @@ export function HttpLoaderFactory(http: HttpClient) {
         useFactory: (HttpLoaderFactory),
         deps: [HttpClient]
       }
-    })
+    }),
+    BrowserAnimationsModule
   ],
-  providers: [ElectronService],
+  providers: [
+    ElectronService,
+    WorkoutService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
