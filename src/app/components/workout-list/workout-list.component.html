@@ -1,10 +1,27 @@
- <div *ngFor="let workout of workouts">
-    <mat-checkbox color="primary" (change)="recordChange($event, workout)">{{ workout.name }} - {{ workout.computeTss() | number: '1.2-2'}}</mat-checkbox>
- </div>
- <br/>
- <h1>Selected Workouts</h1>
- <div *ngFor="let workout of selectedWorkouts">
-   <div>{{ workout.name }}</div>
- </div>
- <div>Total TSS: {{ getSelectedTss() | number: '1.2-2'}}</div>
-
+<div fxLayout="row" fxFlex="50">
+  <div fxLayout="column">
+    <h1>Workouts</h1>
+    <div *ngFor="let workout of workouts">
+      <div fxLayout="row" fxLayoutAlign="space-evenly center">
+        <button mat-icon-button (click)="addWorkout(workout)" fxFlex="10%"><mat-icon>add</mat-icon></button>
+        <button mat-icon-button (click)="removeWorkout(workout)" fxFlex="10%"><mat-icon>remove</mat-icon></button>
+        <div fxFlex="40%">{{ workout.name}} </div>
+        <div fxFlex="30%">{{ getWorkoutTime(workout) }}</div>
+        <div fxFlex>{{ workout.computeTss() | number: '1.2-2' }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div fxLayout="row" fxFlex>
+  <div fxLayout="column" fxLayoutAlign="space-evenly">
+    <h1>Selected Workouts</h1>
+    <div *ngFor="let workout of selectedWorkouts">
+      <div>{{ workout.name }}</div>
+    </div>
+    <div id="metrics">
+      <div>Total TSS: {{ getSelectedTss() | number: '1.2-2'}}</div>
+      <div>Total Time: {{ computeSelectedDuration() }}</div>
+      <div>Low Intensity: {{ computeSelectedLowIntensity() | number: '1.2-2' }}%</div>
+    </div>
+  </div>
+</div>

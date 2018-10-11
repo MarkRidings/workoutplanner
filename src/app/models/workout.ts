@@ -22,7 +22,6 @@ export class Workout {
   }
 
   public addInterval(interval: Interval) {
-    console.log('adding interval: ', interval);
     this.intervals.push(interval);
   }
 
@@ -51,6 +50,16 @@ export class Workout {
 
   computeSeconds(): number {
     return _.sum(this.intervals.map((interval) => interval.duration));
+  }
+
+  computeLowIntesitySeconds(): number {
+    const ltInts = _.filter(this.intervals, (interval) => interval.intensity < 0.83);
+    let total = 0;
+    ltInts.forEach((interval) => {
+      total += interval.duration;
+    });
+
+    return total;
   }
 
   private createRollingAvgList(timeList: number[]): number[] {

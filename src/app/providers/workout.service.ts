@@ -9,7 +9,6 @@ import * as _ from 'lodash';
 export class WorkoutService {
 
   static parseDuration(timeString: string): number {
-    console.log('in parseDuration: ', timeString);
     if (!timeString) {
       throw Error('The timeString passed to parseDuration is not defined');
     }

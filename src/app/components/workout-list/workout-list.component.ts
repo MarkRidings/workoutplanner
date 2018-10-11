@@ -23,7 +23,6 @@ export class WorkoutListComponent implements OnInit {
       workoutNames = _.filter(workoutNames, (line) => line && line !== '');
       workoutNames.forEach((workoutName) => {
         this.workoutService.getWorkout(workoutName).subscribe((workoutFileText) => {
-          console.log('getting... ', workoutName, workoutFileText);
           const workout = this.workoutService.createWorkout(workoutFileText, workoutName);
           this.workouts.push(workout);
         });
@@ -31,11 +30,14 @@ export class WorkoutListComponent implements OnInit {
     });
   }
 
-  recordChange(e, selectedWorkout: Workout) {
-    if (e.checked) {
-      this.selectedWorkouts.push(selectedWorkout);
-    } else {
-      this.selectedWorkouts = _.filter(this.selectedWorkouts, (workout) => workout.name !== selectedWorkout.name);
+  addWorkout(selectedWorkout: Workout) {
+    this.selectedWorkouts.push(selectedWorkout);
+  }
+
+  removeWorkout(selectedWorkout: Workout) {
+    const index = _.findIndex(this.selectedWorkouts, (workout) => workout.name === selectedWorkout.name);
+    if (index !== -1) {
+      this.selectedWorkouts.splice(index, 1);
     }
   }
 
@@ -46,5 +48,34 @@ export class WorkoutListComponent implements OnInit {
     }
 
     return total;
+  }
+
+  getWorkoutTime(workout: Workout): string {
+    return this.formatTime(workout.computeSeconds());
+  }
+
+  computeSelectedDuration(): string {
+    const totalSeconds = _.sumBy(this.selectedWorkouts, (workout) => workout.computeSeconds());
+
+    return this.formatTime(totalSeconds);
+  }
+
+  formatTime(durationSeconds: number): string {
+    const hours = Math.floor(durationSeconds / 3600);
+    const minutes = Math.floor((durationSeconds - (hours * 3600)) / 60);
+    const seconds = durationSeconds - (hours * 3600) - (minutes * 60);
+
+    const hrString = hours < 10 ? `0${hours}` : `${hours}`;
+    const minString = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const secString = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+    return `${hrString}:${minString}:${secString}`;
+  }
+
+  computeSelectedLowIntensity(): number {
+    const ltSecs = _.sumBy(this.selectedWorkouts, (workout) => workout.computeLowIntesitySeconds());
+    const totalSecs = _.sumBy(this.selectedWorkouts, (workout) => workout.computeSeconds());
+
+    return totalSecs !== 0 ? (ltSecs / totalSecs) * 100 : 0;
   }
 }
